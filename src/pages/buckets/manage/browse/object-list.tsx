@@ -36,99 +36,104 @@ const ObjectList = ({ prefix, onPrefixChange }: Props) => {
       <Table>
         <Table.Head>
           <span>Name</span>
+          <span>URL</span>
           <span>Size</span>
           <span>Last Modified</span>
         </Table.Head>
 
-        <Table.Body>
-          {isLoading ? (
-            <tr>
-              <td colSpan={3}>
-                <div className="h-[320px] flex items-center justify-center">
-                  <Loading />
-                </div>
-              </td>
-            </tr>
-          ) : error ? (
-            <tr>
-              <td colSpan={3}>
-                <Alert status="error" icon={<CircleXIcon />}>
-                  <span>{error.message}</span>
-                </Alert>
-              </td>
-            </tr>
-          ) : !data?.prefixes?.length && !data?.objects?.length ? (
-            <tr>
-              <td className="text-center py-16" colSpan={3}>
-                No objects
-              </td>
-            </tr>
-          ) : null}
+<Table.Body>
+  {isLoading ? (
+    <tr>
+      <td colSpan={4}>
+        <div className="h-[320px] flex items-center justify-center">
+          <Loading />
+        </div>
+      </td>
+    </tr>
+  ) : error ? (
+    <tr>
+      <td colSpan={4}>
+        <Alert status="error" icon={<CircleXIcon />}>
+          <span>{error.message}</span>
+        </Alert>
+      </td>
+    </tr>
+  ) : !data?.prefixes?.length && !data?.objects?.length ? (
+    <tr>
+      <td className="text-center py-16" colSpan={4}>
+        No objects
+      </td>
+    </tr>
+  ) : (
+    <>
+      {data?.prefixes.map((prefix) => (
+        <tr
+          key={prefix}
+          className="hover:bg-neutral/60 hover:text-neutral-content group"
+        >
+          <td
+            className="cursor-pointer"
+            role="button"
+            onClick={() => onPrefixChange?.(prefix)}
+          >
+            <span className="flex items-center gap-2 font-normal">
+              <Folder size={20} className="text-primary" />
+              <span title={prefix} className="truncate max-w-[40vw]">{prefix}</span>
+            </span>
+          </td>
+          <td className="truncate max-w-[40vw]" title={prefix}>{prefix}</td>
+          <td colSpan={2} />
+          <ObjectActions object={{ objectKey: prefix, url: "" }} />
+        </tr>
+      ))}
 
-          {data?.prefixes.map((prefix) => (
-            <tr
-              key={prefix}
-              className="hover:bg-neutral/60 hover:text-neutral-content group"
+      {data?.objects.map((object, idx) => {
+        const fullKey = (data.prefix || "") + object.objectKey;
+        const extIdx = fullKey.lastIndexOf(".");
+        const filename =
+          extIdx >= 0
+            ? fullKey.substring(0, extIdx)
+            : fullKey;
+        const ext = extIdx >= 0 ? fullKey.substring(extIdx) : null;
+
+        return (
+          <tr
+            key={object.objectKey}
+            className="hover:bg-neutral/60 hover:text-neutral-content group"
+          >
+            <td
+              className="cursor-pointer"
+              role="button"
+              onClick={() => onObjectClick(object)}
             >
-              <td
-                className="cursor-pointer"
-                role="button"
-                onClick={() => onPrefixChange?.(prefix)}
-              >
-                <span className="flex items-center gap-2 font-normal">
-                  <Folder size={20} className="text-primary" />
-                  {prefix
-                    .substring(0, prefix.lastIndexOf("/"))
-                    .split("/")
-                    .pop()}
-                </span>
-              </td>
-              <td colSpan={2} />
-              <ObjectActions object={{ objectKey: prefix, url: "" }} />
-            </tr>
-          ))}
-
-          {data?.objects.map((object, idx) => {
-            const extIdx = object.objectKey.lastIndexOf(".");
-            const filename =
-              extIdx >= 0
-                ? object.objectKey.substring(0, extIdx)
-                : object.objectKey;
-            const ext = extIdx >= 0 ? object.objectKey.substring(extIdx) : null;
-
-            return (
-              <tr
-                key={object.objectKey}
-                className="hover:bg-neutral/60 hover:text-neutral-content group"
-              >
-                <td
-                  className="cursor-pointer"
-                  role="button"
-                  onClick={() => onObjectClick(object)}
-                >
-                  <span className="flex items-center font-normal w-full">
-                    <FilePreview ext={ext?.substring(1)} object={object} />
-                    <span className="truncate max-w-[40vw]">{filename}</span>
-                    {ext && <span className="text-base-content/60">{ext}</span>}
-                  </span>
-                </td>
-                <td className="whitespace-nowrap">
-                  {readableBytes(object.size)}
-                </td>
-                <td className="whitespace-nowrap">
-                  {dayjs(object.lastModified).fromNow()}
-                </td>
-                <ObjectActions
-                  prefix={data.prefix}
-                  object={object}
-                  end={
-                    idx >= data.objects.length - 2 && data.objects.length > 5
-                  }
-                />
-              </tr>
-            );
-          })}
-        </Table.Body>
+              <span className="flex items-center font-normal w-full">
+                <FilePreview ext={ext?.substring(1)} object={object} />
+                <span className="truncate max-w-[40vw]" title={fullKey}>{filename}</span>
+                {ext && <span className="text-base-content/60" title={ext}>{ext}</span>}
+              </span>
+            </td>
+            <td className="truncate max-w-[40vw]">
+              /{fullKey}
+            </td>
+            <td className="whitespace-nowrap">
+              {readableBytes(object.size)}
+            </td>
+            <td className="whitespace-nowrap">
+              {dayjs(object.lastModified).fromNow()}
+            </td>
+            <ObjectActions
+              prefix={data.prefix}
+              object={object}
+              end={
+                idx >= data.objects.length - 2 && data.objects.length > 5
+              }
+            />
+          </tr>
+        );
+      })}
+    </>
+  )}
+</Table.Body>
       </Table>
 
       <GotoTopButton />

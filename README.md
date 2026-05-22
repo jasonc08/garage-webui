@@ -1,17 +1,22 @@
 # Garage Web UI
 
-[![image](misc/img/garage-webui.png)](misc/img/garage-webui.png)
 
 A simple admin web UI for [Garage](https://garagehq.deuxfleurs.fr/), a self-hosted, S3-compatible, distributed object storage service.
 
 [ [Screenshots](misc/SCREENSHOTS.md) | [Install Garage](https://garagehq.deuxfleurs.fr/documentation/quick-start/) | [Garage Git](https://git.deuxfleurs.fr/Deuxfleurs/garage) ]
+
+## 🔍 Object Search
+**Effortlessly navigate your storage.** 
+The integrated search box allows you to perform **prefix-based searches**, making it simple to locate specific objects or folders even in buckets containing thousands of items.
+
+[![Object Search](misc/img/searchbox.png)](misc/img/searchbox.png)
 
 ## Features
 
 - Garage health status
 - Cluster & layout management
 - Create, update, or view bucket information
-- Integrated objects/bucket browser
+- Integrated object browser with prefix-based search
 - Create & assign access keys
 
 ## Installation
@@ -21,7 +26,7 @@ The Garage Web UI is available as a single executable binary and docker image. Y
 ### Docker CLI
 
 ```sh
-$ docker run -p 3909:3909 -v ./garage.toml:/etc/garage.toml:ro --restart unless-stopped --name garage-webui khairul169/garage-webui:latest
+$ docker run -p 3909:3909 -v ./garage.toml:/etc/garage.toml:ro --restart unless-stopped --name garage-webui jasonc08/garage-webui:latest
 ```
 
 ### Docker Compose
@@ -45,7 +50,7 @@ services:
       - 3903:3903
 
   webui:
-    image: khairul169/garage-webui:latest
+    image: jasonc08/garage-webui:latest
     container_name: garage-webui
     restart: unless-stopped
     volumes:
@@ -56,50 +61,7 @@ services:
       API_BASE_URL: "http://garage:3903"
       S3_ENDPOINT_URL: "http://garage:3900"
 ```
-
-### Without Docker
-
-Get the latest binary from the [release page](https://github.com/khairul169/garage-webui/releases/latest) according to your OS architecture. For example:
-
-```sh
-$ wget -O garage-webui https://github.com/khairul169/garage-webui/releases/download/1.1.0/garage-webui-v1.1.0-linux-amd64
-$ chmod +x garage-webui
-$ sudo cp garage-webui /usr/local/bin
-```
-
-Run the program with specified `garage.toml` config path.
-
-```sh
-$ CONFIG_PATH=./garage.toml garage-webui
-```
-
-If you want to run the program at startup, you may want to create a systemd service.
-
-```sh
-$ sudo nano /etc/systemd/system/garage-webui.service
-```
-
-```
-[Unit]
-Description=Garage Web UI
-After=network.target
-
-[Service]
-Environment="PORT=3919"
-Environment="CONFIG_PATH=/etc/garage.toml"
-ExecStart=/usr/local/bin/garage-webui
-Restart=always
-
-[Install]
-WantedBy=default.target
-```
-
-Then reload and start the garage-webui service.
-
-```sh
-$ sudo systemctl daemon-reload
-$ sudo systemctl enable --now garage-webui
-```
+ 
 
 ### Configuration
 
@@ -181,7 +143,7 @@ This project is bootstrapped using TypeScript & React for the UI, and Go for bac
 ### Setup
 
 ```sh
-$ git clone https://github.com/khairul169/garage-webui.git
+$ git clone https://github.com/jasonc08/garage-webui.git
 $ cd garage-webui && pnpm install
 $ cd backend && pnpm install && cd ..
 ```
@@ -202,8 +164,4 @@ $ cd backend
 $ pnpm run dev:server
 ```
 
-## Troubleshooting
-
-Make sure you are using the latest version of Garage. If the data cannot be loaded, please check whether your instance of Garage has the admin API enabled and the ports are accessible.
-
-If you encounter any problems, please do not hesitate to submit an issue [here](https://github.com/khairul169/garage-webui/issues). You can describe the problem and attach the error logs.
+ 

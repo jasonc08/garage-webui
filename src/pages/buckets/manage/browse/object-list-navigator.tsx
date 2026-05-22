@@ -4,18 +4,20 @@ import { ChevronLeft, ChevronRight, Home, LucideIcon } from "lucide-react";
 import { Fragment } from "react/jsx-runtime";
 
 type Props = {
-  curPrefix: number;
-  setCurPrefix: React.Dispatch<React.SetStateAction<number>>;
-  prefixHistory: string[];
-  actions?: React.ReactNode;
-};
+   curPrefix: number;
+   setCurPrefix: React.Dispatch<React.SetStateAction<number>>;
+   prefixHistory: string[];
+   onHomeClick?: () => void;
+   actions?: React.ReactNode;
+ };
 
 const ObjectListNavigator = ({
-  curPrefix,
-  setCurPrefix,
-  prefixHistory,
-  actions,
-}: Props) => {
+   curPrefix,
+   setCurPrefix,
+   prefixHistory,
+   onHomeClick,
+   actions,
+ }: Props) => {
   const onGoBack = () => {
     if (curPrefix >= 0) setCurPrefix(curPrefix - 1);
   };
@@ -44,11 +46,11 @@ const ObjectListNavigator = ({
       </div>
 
       <div className="order-3 md:order-2 flex flex-row w-full overflow-x-auto items-center bg-base-200 h-10 flex-1 shrink-0 min-w-[80%] md:min-w-0 rounded-lg mx-2 px-2">
-        <HistoryItem
-          icon={Home}
-          isActive={curPrefix === -1}
-          onClick={() => setCurPrefix(-1)}
-        />
+<HistoryItem
+   icon={Home}
+   isActive={curPrefix === -1}
+   onClick={onHomeClick ? () => onHomeClick() : () => setCurPrefix(-1)}
+ />
 
         {prefixHistory.map((prefix, i) => (
           <Fragment key={prefix}>
