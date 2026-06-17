@@ -59,12 +59,12 @@ const Actions = ({ prefix }: Props) => {
     <>
       <CreateFolderAction prefix={prefix} />
       {/* <Button icon={FilePlus} color="ghost" /> */}
-      <Button
+      {/* <Button
         icon={UploadIcon}
         color="ghost"
         title="Upload File"
         onClick={onUploadFile}
-      />
+      /> */}
       {/* <Button icon={EllipsisVertical} color="ghost" /> */}
     </>
   );
