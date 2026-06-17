@@ -35,8 +35,7 @@ const ObjectList = ({ prefix, onPrefixChange }: Props) => {
     <div className="overflow-x-auto min-h-[400px]">
       <Table>
         <Table.Head>
-          <span>Name</span>
-          <span>URL</span>
+          <span>Url</span> 
           <span>Size</span>
           <span>Last Modified</span>
         </Table.Head>
@@ -89,11 +88,7 @@ const ObjectList = ({ prefix, onPrefixChange }: Props) => {
 
       {data?.objects.map((object, idx) => {
         const fullKey = (data.prefix || "") + object.objectKey;
-        const extIdx = fullKey.lastIndexOf(".");
-        const filename =
-          extIdx >= 0
-            ? fullKey.substring(0, extIdx)
-            : fullKey;
+        const extIdx = fullKey.lastIndexOf("."); 
         const ext = extIdx >= 0 ? fullKey.substring(extIdx) : null;
 
         return (
@@ -108,13 +103,9 @@ const ObjectList = ({ prefix, onPrefixChange }: Props) => {
             >
               <span className="flex items-center font-normal w-full">
                 <FilePreview ext={ext?.substring(1)} object={object} />
-                <span className="truncate max-w-[40vw]" title={fullKey}>{filename}</span>
-                {ext && <span className="text-base-content/60" title={ext}>{ext}</span>}
+                /{fullKey}                
               </span>
-            </td>
-            <td className="truncate max-w-[40vw]">
-              /{fullKey}
-            </td>
+            </td> 
             <td className="whitespace-nowrap">
               {readableBytes(object.size)}
             </td>
