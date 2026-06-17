@@ -45,6 +45,14 @@ const Actions = ({ prefix }: Props) => {
         return;
       }
 
+      const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+      for (const file of files) {
+        if (file.size > MAX_SIZE) {
+          toast.error(`${file.name} exceeds 5MB limit`);
+          return;
+        }
+      }
+
       for (const file of files) {
         const key = prefix + file.name;
         putObject.mutate({ key, file });
@@ -59,12 +67,12 @@ const Actions = ({ prefix }: Props) => {
     <>
       <CreateFolderAction prefix={prefix} />
       {/* <Button icon={FilePlus} color="ghost" /> */}
-      {/* <Button
+      <Button
         icon={UploadIcon}
         color="ghost"
         title="Upload File"
         onClick={onUploadFile}
-      /> */}
+      />
       {/* <Button icon={EllipsisVertical} color="ghost" /> */}
     </>
   );
